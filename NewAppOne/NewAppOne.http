@@ -1,0 +1,6 @@
+@NewAppOne_HostAddress = http://localhost:5282
+
+GET {{NewAppOne_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
