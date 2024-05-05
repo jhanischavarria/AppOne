@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using UPB.LogicPatient.Manager;
 using UPB.LogicPatient.Models;
+using UPB.LogicPatient.Storage;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -10,6 +11,7 @@ namespace UPB.NewAppOne.Controllers
     [ApiController]
     public class PatientController : ControllerBase
     {
+       
         private PatientManager _patientManager;
 
         public PatientController(PatientManager patientManager)

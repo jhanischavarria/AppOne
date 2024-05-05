@@ -5,83 +5,54 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using UPB.LogicPatient.Models;
+using Microsoft.Extensions.Configuration;
+using UPB.LogicPatient.Storage;
 
 namespace UPB.LogicPatient.Manager
 {
     public class PatientManager
     {
         private List<Patient> _patients;
-        public PatientManager() 
+        private readonly PatientStorage _patientStorage;
+        public PatientManager(PatientStorage patientStorage) 
         {
-            _patients = new List<Patient>();
-            _patients.Add(new Patient()
-            {
-                Name= "Juan",
-                LastName = "Pérez",
-                CI = "12345678"
-            });
-
-      
-            _patients.Add(new Patient()
-            {
-                Name = "Maria",
-                LastName = "Gonzalez",
-                CI = "87654321"
-            });
+            _patientStorage = patientStorage;
+           
         }
         //Method to get all patients
         public List<Patient> GetAllPatients()
         {
-            return _patients;
+            return _patientStorage.ReadPatientsFromFile();
         }
 
         //Method to get a patient by CI
         public Patient? GetPatientByCI(string ci)
         {
-            Patient? foundStudent = _patients.Find(p => p.CI == ci);
-            return foundStudent;
+            return _patientStorage.GetPatientByCI(ci);
         }
         //Method to create patient
         public Patient CreatePatient(Patient patientToCreate)
         {
-            Patient createdPatient = new Patient()
-            {
-                Name = patientToCreate.Name,
-                LastName = patientToCreate.LastName,
-                CI = patientToCreate.CI
-            };
-            _patients.Add(createdPatient); 
-            return createdPatient;
+            return _patientStorage.WritePatientStorage(patientToCreate);
+            
         }
 
         //Method to upade patient
         public Patient? UptadePatient(string ci, string name, string lastName)
         {
-            var patientUptade = _patients.Find(p => p.CI == ci);
-            if ( patientUptade != null)
+            Patient updatedPatient = new Patient()
             {
-                patientUptade.Name = name;
-                patientUptade.LastName = lastName;
-            }
-            else
-            {
-                Console.WriteLine("Patient not found");
-            }
-            return patientUptade;
+                CI = ci,
+                Name = name,
+                LastName = lastName
+            };
+            return _patientStorage.UpdatePatientInStorage(ci, updatedPatient);
+
         }
         //Method to delete patient
         public Patient? DeletePatient(string ci)
         {
-            var patientDelete = _patients.Find(p => p.CI == ci);
-            if (patientDelete != null)
-            {
-                _patients.Remove(patientDelete);
-            }
-            else
-            {
-                Console.WriteLine("Patient not found");
-            }
-            return patientDelete;
+            return _patientStorage.DeletePatientFromStorage(ci);
         }
 
 
