@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using UPB.LogicPatient.Manager;
+using UPB.LogicPatient.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,36 +10,46 @@ namespace UPB.NewAppOne.Controllers
     [ApiController]
     public class PatientController : ControllerBase
     {
-        // GET: api/<ValuesController>
+        private PatientManager _patientManager;
+
+        public PatientController(PatientManager patientManager)
+        {
+            _patientManager = patientManager;
+        }
+
+        // HTTP GET - Get all Patients
         [HttpGet]
-        public IEnumerable<string> Get()
+        public List<Patient> GetPatients()
         {
-            return new string[] { "value1", "value2" };
+            return _patientManager.GetAllPatients();
         }
 
-        // GET api/<ValuesController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        //  HTTP GET - Get Patient by CI
+        [HttpGet("{ci}")]
+        public Patient? GetPatientByCI(string ci)
         {
-            return "value";
+            return _patientManager.GetPatientByCI(ci);
         }
 
-        // POST api/<ValuesController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        // HTTP POST - Create Patient
+        public Patient CreatePatient([FromBody] Patient patient)
         {
+            return _patientManager.CreatePatient(patient);
         }
 
-        // PUT api/<ValuesController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // HTTP PUT - Update Patient
+        [HttpPut("{ci}")]
+        public Patient UpdatePatient(string ci, [FromBody] Patient updatedPatient)
         {
+           return _patientManager.UptadePatient(ci, updatedPatient.Name, updatedPatient.LastName);
         }
 
-        // DELETE api/<ValuesController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        // HTTP DELETE - Delete Patient
+        [HttpDelete("{ci}")]
+        public Patient DeletePatient(string ci)
         {
+            return _patientManager.DeletePatient(ci);
         }
     }
 }
